@@ -1,0 +1,22 @@
+{
+  "htmlLang": "fr",
+  "title": "Évaluation du cours",
+  "instructions": "Veuillez répondre à chaque question en quelques phrases. Vos réflexions sincères nous aident à améliorer le cours.",
+  "dateLabel": "Aujourd'hui",
+  "submit": "Envoyer l'évaluation",
+  "thanks": "Merci pour vos commentaires !",
+  "questions": [
+    "Quel sujet de ce cours avez-vous trouvé le plus difficile, et pourquoi ?",
+    "Décrivez un concept que vous n'avez compris qu'après les travaux pratiques. Qu'est-ce qui a fait le déclic ?",
+    "Comment votre approche de la conception de bases de données ou d'API a-t-elle évolué depuis le début du trimestre ?",
+    "Qu'amélioreriez-vous dans la façon dont ce cours a été enseigné ou évalué ?",
+    "Comment comptez-vous appliquer ce que vous avez appris dans ce cours à l'avenir ?"
+  ],
+  "answers": [
+    "Le sujet le plus difficile a été la gestion de la concurrence lors de la réservation. Il est facile de vérifier un créneau puis d'insérer, mais deux requêtes peuvent réussir cette vérification au même instant. J'ai compris le problème avec la limite de 12 rendez-vous par jour : un index unique ne suffit pas, il faut une transaction avec un verrou de ligne.",
+    "Les transactions n'ont pris tout leur sens que lorsque j'ai construit l'annulation. Une annulation et son remboursement doivent réussir ou échouer ensemble. Le déclic est venu quand j'ai vu qu'une erreur à mi-chemin laisserait un rendez-vous annulé sans remboursement enregistré, et qu'un rollback annule les deux modifications.",
+    "Avant, je partais des routes et je voyais la base de données comme un simple lieu de stockage. Maintenant, je pars du schéma et je laisse les contraintes (clés étrangères, clés uniques, CHECK) faire respecter les règles, puis j'utilise l'API pour une validation claire et les bons codes d'état (400, 404, 409, 422).",
+    "J'ajouterais plus d'exercices guidés sur les files Redis et les workers plus tôt dans le trimestre, ainsi qu'un court exemple de test de code qui utilise une base de données. Publier plus tôt la grille complète et un exemple de bonne vidéo nous aiderait aussi à planifier notre temps.",
+    "Je compte utiliser ces compétences dans mes propres projets, surtout des plateformes de santé et de dossiers médicaux pour l'Afrique de l'Est comme MediCarry. Les requêtes paramétrées, les transactions, les files pour les tâches de fond et un journal d'audit feront partie de chaque backend que je construirai."
+  ]
+}

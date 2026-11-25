@@ -1,0 +1,22 @@
+{
+  "htmlLang": "en",
+  "title": "Course Feedback",
+  "instructions": "Please answer each question in a few sentences. Your honest reflections help us improve the course.",
+  "dateLabel": "Today",
+  "submit": "Submit feedback",
+  "thanks": "Thank you for your feedback!",
+  "questions": [
+    "Which topic in this course did you find most challenging, and why?",
+    "Describe one concept you understood only after the practical assignments. What made it click?",
+    "How has your approach to designing databases or APIs changed since the start of the trimester?",
+    "What would you improve about how this course was taught or assessed?",
+    "How do you plan to apply what you learned in this course going forward?"
+  ],
+  "answers": [
+    "The most challenging topic was handling concurrency in the booking flow. It is easy to check a slot and then insert, but two requests can both pass that check at the same instant. I only understood the problem when I thought about the daily cap of 12, where a unique index cannot help and a transaction with a row lock is needed.",
+    "Database transactions only made sense once I built the cancellation feature. A cancellation and its refund have to succeed or fail together. It clicked when I saw that a failure halfway would leave a cancelled appointment with no refund recorded, and that a rollback undoes both changes.",
+    "I used to start from the endpoints and treat the database as a place to store data. Now I start from the schema and let constraints such as foreign keys, unique keys and CHECKs enforce the rules, then use the API for friendly validation and the right status codes (400, 404, 409, 422).",
+    "I would add more guided practice on Redis queues and background workers earlier in the trimester, and give a short example of testing code that talks to a database. Releasing the full rubric and an example of a good video earlier would also help us plan our time.",
+    "I plan to use these skills on my own projects, especially health and records platforms for East Africa such as MediCarry. Parameterized queries, transactions, queues for background work and an audit log will be part of every backend I build."
+  ]
+}
