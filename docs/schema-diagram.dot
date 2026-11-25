@@ -1,0 +1,48 @@
+digraph MediBook {
+  graph [rankdir=LR, fontname="Helvetica", nodesep=0.9, ranksep=1.6, pad=0.4, bgcolor="white",
+         label=<<b>MediBook - normalized schema (3NF)</b><br/><font point-size="11">MySQL 8 / InnoDB, utf8mb4. PK = primary key, FK = foreign key, UQ = unique, NN = NOT NULL</font>>,
+         labelloc=t, fontsize=18];
+  node [shape=plain, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=11];
+
+  patients [label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#f4f8ff">
+      <tr><td colspan="4" bgcolor="#2b5fab"><font color="white"><b>patients</b></font></td></tr>
+      <tr><td align="left">PK</td><td align="left"><b>id</b></td><td align="left">INT UNSIGNED</td><td align="left">NN, AUTO_INCREMENT</td></tr>
+      <tr><td align="left"></td><td align="left">full_name</td><td align="left">VARCHAR(100)</td><td align="left">NN</td></tr>
+      <tr><td align="left">UQ</td><td align="left">email</td><td align="left">VARCHAR(255)</td><td align="left">NN, UNIQUE</td></tr>
+      <tr><td align="left"></td><td align="left">phone</td><td align="left">VARCHAR(20)</td><td align="left">NN</td></tr>
+      <tr><td align="left"></td><td align="left">created_at</td><td align="left">DATETIME</td><td align="left">NN, DEFAULT NOW</td></tr>
+    </table>>];
+
+  doctors [label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#f4fff6">
+      <tr><td colspan="4" bgcolor="#2e7d46"><font color="white"><b>doctors</b></font></td></tr>
+      <tr><td align="left">PK</td><td align="left"><b>id</b></td><td align="left">INT UNSIGNED</td><td align="left">NN, AUTO_INCREMENT</td></tr>
+      <tr><td align="left"></td><td align="left">full_name</td><td align="left">VARCHAR(100)</td><td align="left">NN</td></tr>
+      <tr><td align="left"></td><td align="left">specialty</td><td align="left">VARCHAR(100)</td><td align="left">NN</td></tr>
+      <tr><td align="left"></td><td align="left">consultation_fee</td><td align="left">DECIMAL(10,2)</td><td align="left">NN, CHECK (&gt;= 0)</td></tr>
+      <tr><td align="left"></td><td align="left">room</td><td align="left">VARCHAR(20)</td><td align="left">NN</td></tr>
+      <tr><td align="left"></td><td align="left">created_at</td><td align="left">DATETIME</td><td align="left">NN, DEFAULT NOW</td></tr>
+    </table>>];
+
+  appointments [label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="5" bgcolor="#fffaf0">
+      <tr><td colspan="4" bgcolor="#b8650b"><font color="white"><b>appointments</b></font></td></tr>
+      <tr><td align="left">PK</td><td align="left"><b>id</b></td><td align="left">INT UNSIGNED</td><td align="left">NN, AUTO_INCREMENT</td></tr>
+      <tr><td align="left">FK</td><td align="left">patient_id</td><td align="left">INT UNSIGNED</td><td align="left">NN -&gt; patients.id (RESTRICT)</td></tr>
+      <tr><td align="left">FK</td><td align="left">doctor_id</td><td align="left">INT UNSIGNED</td><td align="left">NN -&gt; doctors.id (RESTRICT)</td></tr>
+      <tr><td align="left"></td><td align="left">appointment_datetime</td><td align="left">DATETIME</td><td align="left">NN, 30-min boundary, 09:00-16:30</td></tr>
+      <tr><td align="left"></td><td align="left">status</td><td align="left">ENUM('booked','cancelled')</td><td align="left">NN, DEFAULT 'booked'</td></tr>
+      <tr><td align="left"></td><td align="left">amount_paid</td><td align="left">DECIMAL(10,2)</td><td align="left">NN, CHECK (&gt;= 0)</td></tr>
+      <tr><td align="left"></td><td align="left">refund_amount</td><td align="left">DECIMAL(10,2)</td><td align="left">NN, DEFAULT 0, CHECK (0..amount_paid)</td></tr>
+      <tr><td align="left"></td><td align="left">booked_at</td><td align="left">DATETIME</td><td align="left">NN, DEFAULT NOW</td></tr>
+      <tr><td align="left"></td><td align="left">cancelled_at</td><td align="left">DATETIME</td><td align="left">NULL until cancelled</td></tr>
+      <tr><td align="left">UQ</td><td align="left">active_slot</td><td align="left">DATETIME (STORED generated)</td><td align="left">= IF(status='booked', appointment_datetime, NULL)</td></tr>
+      <tr><td colspan="4" bgcolor="#fff0c2" align="left"><b>UNIQUE (doctor_id, active_slot)</b> - a doctor can never hold two<br align="left"/>booked appointments at the same date/time; cancelled rows have<br align="left"/>active_slot = NULL so the slot can be rebooked while the record is kept.<br align="left"/></td></tr>
+      <tr><td colspan="4" bgcolor="#eeeeee" align="left">CHECK chk_appt_slot_boundary: MINUTE IN (0,30) AND SECOND = 0<br align="left"/>CHECK chk_appt_working_hours: TIME BETWEEN 09:00:00 AND 16:30:00<br align="left"/>CHECK chk_appt_cancellation_state: booked =&gt; cancelled_at NULL, refund 0; cancelled =&gt; cancelled_at NOT NULL<br align="left"/>INDEX (doctor_id, appointment_datetime) for range reports<br align="left"/></td></tr>
+    </table>>];
+
+  patients -> appointments [dir=both, arrowtail=teetee, arrowhead=crowodot, label="  1 : N  \n  one patient has\n  zero or many appointments  ", penwidth=1.6, color="#2b5fab"];
+  doctors  -> appointments [dir=both, arrowtail=teetee, arrowhead=crowodot, label="  1 : N  \n  one doctor has\n  zero or many appointments  ", penwidth=1.6, color="#2e7d46"];
+}
