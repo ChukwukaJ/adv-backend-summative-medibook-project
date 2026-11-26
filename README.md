@@ -1,5 +1,7 @@
 # MediBook - Clinic Appointment Booking Backend
 
+**Walkthrough document:** https://docs.google.com/document/d/1Txc8UEM61FQbqVknHOCGR1ZNQRFxzJX9iSuAXNa8yEk/edit?usp=sharing
+
 **Video walkthrough:** VIDEO_LINK_HERE
 
 Express.js + MySQL (`mysql2`, parameterized queries only, no ORM) + Redis (BullMQ job queues and a Redis-list waitlist).
